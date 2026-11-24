@@ -130,7 +130,7 @@ RUN cd packages/db && node scripts/combine-schemas.js
 RUN cp packages/db/dist/schema.prisma apps/portal/prisma/schema.prisma
 
 # Generate Prisma client and build workspace packages that publish from dist/
-RUN cd packages/db && node scripts/generate-prisma-client-js.js
+RUN cd packages/db && bun run build
 RUN cd packages/auth && bun run build \
  && cd ../company && bun run build
 
