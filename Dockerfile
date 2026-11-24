@@ -129,6 +129,11 @@ COPY --from=deps /app/node_modules ./node_modules
 RUN cd packages/db && node scripts/combine-schemas.js
 RUN cp packages/db/dist/schema.prisma apps/portal/prisma/schema.prisma
 
+# Generate Prisma client and build workspace packages that publish from dist/
+RUN cd packages/db && node scripts/generate-prisma-client-js.js
+RUN cd packages/auth && bun run build \
+ && cd ../company && bun run build
+
 # Ensure Next build has required public env at build-time
 ARG NEXT_PUBLIC_BETTER_AUTH_URL
 ARG NEXT_PUBLIC_API_URL
