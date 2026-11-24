@@ -35,7 +35,8 @@ RUN cd packages/db && node scripts/combine-schemas.js \
                    && node scripts/generate-prisma-client-js.js
 
 # Build workspace packages that publish from dist/
-RUN cd packages/auth && bun run build \
+RUN cd packages/db && bun run build \
+ && cd ../auth && bun run build \
  && cd ../billing && bun run build \
  && cd ../company && bun run build
 
