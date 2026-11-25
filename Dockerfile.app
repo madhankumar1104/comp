@@ -60,7 +60,7 @@ ENV NEXT_PUBLIC_BETTER_AUTH_URL=$NEXT_PUBLIC_BETTER_AUTH_URL \
     NEXT_OUTPUT_STANDALONE=true \
     NODE_OPTIONS=--max_old_space_size=6144
 
-RUN cd apps/app && SKIP_ENV_VALIDATION=true bun run build:docker
+RUN cd apps/app && bun run db:getschema && SKIP_ENV_VALIDATION=true bun run build:docker
 
 FROM node:22.23.4-alpine AS app
 
