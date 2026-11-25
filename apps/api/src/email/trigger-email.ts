@@ -2,7 +2,7 @@ import { render } from '@react-email/render';
 import { idempotencyKeys, tasks } from '@trigger.dev/sdk';
 import type { ReactElement } from 'react';
 import type { EmailChannel, sendEmailTask } from '../trigger/email/send-email';
-import type { EmailAttachment } from './resend';
+import { sendEmail, type EmailAttachment } from './resend';
 
 type TriggerEmailFlags = {
   marketing?: boolean;
@@ -29,6 +29,21 @@ export async function triggerEmail(params: {
   attachments?: EmailAttachment[];
   idempotencyKey?: string;
 }): Promise<{ id: string }> {
+  // Self-hosted: send directly via Resend when Trigger.dev workers are not deployed.
+  if (process.env.EMAIL_DELIVERY === 'direct') {
+    const result = await sendEmail({
+      to: params.to,
+      subject: params.subject,
+      react: params.react,
+      marketing: params.marketing,
+      system: params.system || params.trustPortal,
+      cc: params.cc,
+      scheduledAt: params.scheduledAt,
+      attachments: params.attachments,
+    });
+    return { id: result?.id ?? 'direct' };
+  }
+
   try {
     const html = await render(params.react);
 
