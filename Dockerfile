@@ -144,7 +144,7 @@ ENV NEXT_PUBLIC_BETTER_AUTH_URL=$NEXT_PUBLIC_BETTER_AUTH_URL \
     NODE_OPTIONS=--max_old_space_size=6144
 
 # Build the portal
-RUN cd apps/portal && SKIP_ENV_VALIDATION=true bun run build:docker
+RUN cd apps/portal && bun run db:getschema && SKIP_ENV_VALIDATION=true bun run build:docker
 
 # =============================================================================
 # STAGE 6: Portal Production
